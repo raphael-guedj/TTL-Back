@@ -15,15 +15,15 @@ router.post("/sign-up", async function (req, res, next) {
   var userExists = await userModel.findOne({
     email: req.body.email,
   });
-  var salt = uid2(32);
-  var newUser = new userModel({
-    name: req.body.name,
-    email: req.body.email,
-    salt: salt,
-    password: SHA256(req.body.password + salt).toString(encBase64),
-    token: uid2(32),
-  });
   if (!userExists) {
+    var salt = uid2(32);
+    var newUser = new userModel({
+      name: req.body.name,
+      email: req.body.email,
+      salt: salt,
+      password: SHA256(req.body.password + salt).toString(encBase64),
+      token: uid2(32),
+    });
     var user = await newUser.save();
     res.json({ result: true, message: "Requête ok!", user });
   } else {
@@ -50,7 +50,7 @@ router.post("/sign-in", async function (req, res) {
     req.body.password !== "" &&
     hash === userExists.password
   ) {
-    res.json({ result: true, message: "Sign-in OK", token });
+    res.json({ result: true, message: "Sign-in OK", userExists });
   } else {
     res.json({
       result: false,
