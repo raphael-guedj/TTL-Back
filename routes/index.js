@@ -21,7 +21,7 @@ router.post("/sign-up", async function (req, res, next) {
     token: uid2(32),
   });
   var user = await newUser.save();
-  res.json({ message: "Requête ok!", user });
+  res.json({ result: true, message: "Requête ok", user });
 });
 
 router.post("/sign-in", async function (req, res) {
@@ -40,7 +40,7 @@ router.post("/sign-in", async function (req, res) {
     req.body.password !== "" &&
     hash === userExists.password
   ) {
-    res.json({ result: true, message: "Sign-in OK", token });
+    res.json({ result: true, message: "Sign-in OK", userExists });
   } else {
     res.json({
       result: false,
