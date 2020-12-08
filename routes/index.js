@@ -59,6 +59,17 @@ router.post("/sign-in", async function (req, res) {
     });
   }
 });
+
+router.get("/get-user", async function (req, res, next) {
+  // console.log(req.query.token);
+  var user = await userModel.findOne({ token: req.query.token });
+  // console.log("mon user", user);
+  if (user) {
+    res.json({ result: true, user });
+  }
+  res.json({ result: false });
+});
+
 router.post("/new-invitation", async function (req, res, next) {
   var newInvitation = new invitationModel({
     message: req.body.message,
@@ -68,22 +79,13 @@ router.post("/new-invitation", async function (req, res, next) {
     cuisine_propose: req.body.kitchen,
     lieu_propose: req.body.location,
     adresse: req.body.address,
-    statut_invit: "en cours",
+    statut_invit: req.body.statut,
     id_sender: req.body.sender,
-    id_reveiver: req.body.receiver,
+    id_receiver: req.body.receiver,
+    notif_lu: req.body.read,
   });
   await newInvitation.save();
   res.json({ response: true, message: "Message bien envoyé", newInvitation });
-});
-
-router.get("/get-user", async function (req, res, next) {
-  console.log(req.query.token);
-  var user = await userModel.findOne({ token: req.query.token });
-  console.log("mon user", user);
-  if (user) {
-    res.json({ result: true, user });
-  }
-  res.json({ result: false });
 });
 
 module.exports = router;

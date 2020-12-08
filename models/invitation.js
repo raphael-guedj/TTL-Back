@@ -11,7 +11,7 @@ var invitationSchema = mongoose.Schema({
   statut_invit: String,
   id_sender: String,
   id_receiver: String,
-  notif_lu: String,
+  notif_lu: Boolean,
 });
 
 var invitationModel = mongoose.model("invitations", invitationSchema);
