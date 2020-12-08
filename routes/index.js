@@ -76,4 +76,14 @@ router.post("/new-invitation", async function (req, res, next) {
   res.json({ response: true, message: "Message bien envoyé", newInvitation });
 });
 
+router.get("/get-user", async function (req, res, next) {
+  console.log(req.query.token);
+  var user = await userModel.findOne({ token: req.query.token });
+  console.log("mon user", user);
+  if (user) {
+    res.json({ result: true, user });
+  }
+  res.json({ result: false });
+});
+
 module.exports = router;
