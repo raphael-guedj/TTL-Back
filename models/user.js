@@ -6,6 +6,7 @@ var userSchema = mongoose.Schema({
   salt: String,
   password: String,
   token: String,
+  isConnected: Boolean,
   photo: String,
   city: String,
   arrondissement: String,

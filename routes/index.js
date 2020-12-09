@@ -23,6 +23,7 @@ router.post("/sign-up", async function (req, res, next) {
       salt: salt,
       password: SHA256(req.body.password + salt).toString(encBase64),
       token: uid2(32),
+      isConnected: true,
     });
     var user = await newUser.save();
     res.json({ result: true, message: "Requête ok!", user });
@@ -40,7 +41,6 @@ router.post("/sign-in", async function (req, res) {
   });
   if (userExists) {
     console.log(userExists);
-    var token = userExists.token;
     var hash = SHA256(req.body.password + userExists.salt).toString(encBase64);
   }
 
@@ -50,6 +50,15 @@ router.post("/sign-in", async function (req, res) {
     req.body.password !== "" &&
     hash === userExists.password
   ) {
+    await userModel.updateOne(
+      {
+        email: req.body.email,
+      },
+      {
+        isConnected: true,
+      }
+    );
+    console.log(userExists);
     res.json({ result: true, message: "Sign-in OK", userExists });
   } else {
     res.json({
@@ -57,6 +66,26 @@ router.post("/sign-in", async function (req, res) {
       message:
         "Au moins une des informations est invalide, vérifiez les champs.",
     });
+  }
+});
+
+router.get("/logout", async function (req, res, next) {
+  console.log(req.query.token);
+  var user = await userModel.findOne({ token: req.query.token });
+  console.log("mon user", user);
+  if (user) {
+    await userModel.updateOne(
+      {
+        token: req.query.token,
+      },
+      {
+        isConnected: false,
+      }
+    );
+    console.log(user);
+    res.json({ result: true });
+  } else {
+    res.json({ result: false });
   }
 });
 
@@ -70,7 +99,21 @@ router.get("/get-user", async function (req, res, next) {
   }
 });
 
-router.get("/get-alluser", async function (req, res) {});
+router.get("/alluser", async function (req, res) {
+  let allUser = await userModel.find();
+  let myId = req.query.id;
+  console.log("avec mon id", allUser);
+  // console.log(myId);
+
+  let userExcl = allUser.filter((user) => user._id != myId);
+  console.log("sans mon id", userExcl);
+
+  if (allUser) {
+    res.json({ result: true, userExcl });
+  } else {
+    res.json({ result: false });
+  }
+});
 
 router.post("/new-invitation", async function (req, res, next) {
   var newInvitation = new invitationModel({
