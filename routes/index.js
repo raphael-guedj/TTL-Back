@@ -61,14 +61,16 @@ router.post("/sign-in", async function (req, res) {
 });
 
 router.get("/get-user", async function (req, res, next) {
-  // console.log(req.query.token);
   var user = await userModel.findOne({ token: req.query.token });
   // console.log("mon user", user);
   if (user) {
     res.json({ result: true, user });
+  } else {
+    res.json({ result: false });
   }
-  res.json({ result: false });
 });
+
+router.get("/get-alluser", async function (req, res) {});
 
 router.post("/new-invitation", async function (req, res, next) {
   var newInvitation = new invitationModel({
