@@ -153,6 +153,8 @@ router.post("/recordmydata", async function (req, res) {
 });
 
 router.post("/new-invitation", async function (req, res, next) {
+  console.log(req.body);
+
   var newInvitation = new invitationModel({
     message: req.body.message,
     date: req.body.date,
@@ -161,13 +163,13 @@ router.post("/new-invitation", async function (req, res, next) {
     cuisine_propose: req.body.kitchen,
     lieu_propose: req.body.location,
     adresse: req.body.address,
-    statut_invit: req.body.statut,
+    statut_invit: "En cours",
     id_sender: req.body.sender,
     id_receiver: req.body.receiver,
-    notif_lu: req.body.read,
+    notif_lu: false,
   });
   await newInvitation.save();
-  res.json({ response: true, message: "Message bien envoyé", newInvitation });
+  res.json({ response: true, message: "Message bien envoyé" });
 });
 
 module.exports = router;
