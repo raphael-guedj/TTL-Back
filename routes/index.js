@@ -115,6 +115,43 @@ router.get("/alluser", async function (req, res) {
   }
 });
 
+router.get("/getmydata", async function (req, res) {
+  let myUser = await userModel.findOne({ _id: req.query.id });
+  console.log("user", myUser);
+  // console.log(myId);
+
+  if (myUser) {
+    res.json({ result: true, myUser });
+  } else {
+    res.json({ result: false });
+  }
+});
+
+router.post("/recordmydata", async function (req, res) {
+  var myData = await userModel.updateOne(
+    {
+      _id: req.body.id,
+    },
+    {
+      name: req.body.name,
+      email: req.body.email,
+      profession: req.body.job,
+      city: req.body.city,
+      arrondissement: req.body.postcode,
+      secteur: req.body.activity,
+      language: req.body.language,
+      description: req.body.text,
+      cuisines: req.body.food,
+    }
+  );
+  console.log(myData);
+  if (myData) {
+    res.json({ result: true, myData });
+  } else {
+    res.json({ result: false });
+  }
+});
+
 router.post("/new-invitation", async function (req, res, next) {
   var newInvitation = new invitationModel({
     message: req.body.message,

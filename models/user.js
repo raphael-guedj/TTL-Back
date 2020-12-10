@@ -12,7 +12,7 @@ var userSchema = mongoose.Schema({
   arrondissement: String,
   profession: String,
   secteur: String,
-  langues: [String],
+  language: [String],
   description: String,
   envies: [String],
   cuisines: [String],
