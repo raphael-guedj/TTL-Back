@@ -128,6 +128,7 @@ router.get("/getmydata", async function (req, res) {
 });
 
 router.post("/recordmydata", async function (req, res) {
+  console.log(req.body);
   var myData = await userModel.updateOne(
     {
       _id: req.body.id,
@@ -139,14 +140,41 @@ router.post("/recordmydata", async function (req, res) {
       city: req.body.city,
       arrondissement: req.body.postcode,
       secteur: req.body.activity,
-      language: req.body.language,
+      language: JSON.parse(req.body.language),
       description: req.body.text,
-      cuisines: req.body.food,
+      food: JSON.parse(req.body.food),
+      wish1: JSON.parse(req.body.wish1),
+      wish2: JSON.parse(req.body.wish2),
+      wish3: JSON.parse(req.body.wish3),
+      wish4: JSON.parse(req.body.wish4),
+      wish5: JSON.parse(req.body.wish5),
+      wish6: JSON.parse(req.body.wish6),
     }
   );
-  console.log(myData);
+  // console.log(req.body);
   if (myData) {
     res.json({ result: true, myData });
+  } else {
+    res.json({ result: false });
+  }
+});
+
+router.get("/mydataprofile", async function (req, res) {
+  // console.log(req.query.id);
+  var user = await userModel.findOne({ _id: req.query.id });
+  console.log(user);
+  if (
+    user.name != "" &&
+    user.profession != "" &&
+    user.email != "" &&
+    user.city != "" &&
+    user.arrondissement != "" &&
+    user.secteur != "" &&
+    user.language != "" &&
+    user.description != "" &&
+    user.food != ""
+  ) {
+    res.json({ result: true });
   } else {
     res.json({ result: false });
   }
