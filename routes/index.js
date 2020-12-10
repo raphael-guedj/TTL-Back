@@ -128,6 +128,7 @@ router.get("/getmydata", async function (req, res) {
 });
 
 router.post("/recordmydata", async function (req, res) {
+  console.log(req.body);
   var myData = await userModel.updateOne(
     {
       _id: req.body.id,
@@ -150,9 +151,30 @@ router.post("/recordmydata", async function (req, res) {
       wish6: JSON.parse(req.body.wish6),
     }
   );
-  console.log(req.body);
+  // console.log(req.body);
   if (myData) {
     res.json({ result: true, myData });
+  } else {
+    res.json({ result: false });
+  }
+});
+
+router.get("/mydataprofile", async function (req, res) {
+  // console.log(req.query.id);
+  var user = await userModel.findOne({ _id: req.query.id });
+  console.log(user);
+  if (
+    user.name != "" &&
+    user.profession != "" &&
+    user.email != "" &&
+    user.city != "" &&
+    user.arrondissement != "" &&
+    user.secteur != "" &&
+    user.language != "" &&
+    user.description != "" &&
+    user.food != ""
+  ) {
+    res.json({ result: true });
   } else {
     res.json({ result: false });
   }
