@@ -14,8 +14,13 @@ var userSchema = mongoose.Schema({
   secteur: String,
   language: [String],
   description: String,
-  envies: [String],
-  cuisines: [String],
+  food: [String],
+  wish1: Boolean,
+  wish2: Boolean,
+  wish3: Boolean,
+  wish4: Boolean,
+  wish5: Boolean,
+  wish6: Boolean,
   invitations: [{ type: mongoose.Schema.Types.ObjectId, ref: "invitations" }],
 });
 
