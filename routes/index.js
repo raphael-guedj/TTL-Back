@@ -40,7 +40,7 @@ router.post("/sign-in", async function (req, res) {
     email: req.body.email,
   });
   if (userExists) {
-    console.log(userExists);
+    // console.log(userExists);
     var hash = SHA256(req.body.password + userExists.salt).toString(encBase64);
   }
 
@@ -58,7 +58,7 @@ router.post("/sign-in", async function (req, res) {
         isConnected: true,
       }
     );
-    console.log(userExists);
+    // console.log(userExists);
     res.json({ result: true, message: "Sign-in OK", userExists });
   } else {
     res.json({
@@ -70,9 +70,9 @@ router.post("/sign-in", async function (req, res) {
 });
 
 router.get("/logout", async function (req, res, next) {
-  console.log(req.query.token);
+  // console.log(req.query.token);
   var user = await userModel.findOne({ token: req.query.token });
-  console.log("mon user", user);
+  // console.log("mon user", user);
   if (user) {
     await userModel.updateOne(
       {
@@ -82,11 +82,19 @@ router.get("/logout", async function (req, res, next) {
         isConnected: false,
       }
     );
-    console.log(user);
+    // console.log(user);
     res.json({ result: true });
   } else {
     res.json({ result: false });
   }
+});
+
+router.get("/delete-user", async function (req, res, next) {
+  // console.log(req.query.id);
+  await userModel.deleteOne({
+    _id: req.query.id,
+  });
+  res.json({ result: true });
 });
 
 router.get("/get-user", async function (req, res, next) {
@@ -102,11 +110,11 @@ router.get("/get-user", async function (req, res, next) {
 router.get("/alluser", async function (req, res) {
   let allUser = await userModel.find();
   let myId = req.query.id;
-  console.log("avec mon id", allUser);
+  // console.log("avec mon id", allUser);
   // console.log(myId);
 
   let userExcl = allUser.filter((user) => user._id != myId);
-  console.log("sans mon id", userExcl);
+  // console.log("sans mon id", userExcl);
 
   if (allUser) {
     res.json({ result: true, userExcl });
@@ -117,7 +125,7 @@ router.get("/alluser", async function (req, res) {
 
 router.get("/getmydata", async function (req, res) {
   let myUser = await userModel.findOne({ _id: req.query.id });
-  console.log("user", myUser);
+  // console.log("user", myUser);
   // console.log(myId);
 
   if (myUser) {
@@ -128,7 +136,7 @@ router.get("/getmydata", async function (req, res) {
 });
 
 router.post("/recordmydata", async function (req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   var myData = await userModel.updateOne(
     {
       _id: req.body.id,
@@ -162,7 +170,7 @@ router.post("/recordmydata", async function (req, res) {
 router.get("/mydataprofile", async function (req, res) {
   // console.log(req.query.id);
   var user = await userModel.findOne({ _id: req.query.id });
-  console.log(user);
+  // console.log(user);
   if (
     user.name != "" &&
     user.profession != "" &&
@@ -181,7 +189,7 @@ router.get("/mydataprofile", async function (req, res) {
 });
 
 router.post("/new-invitation", async function (req, res, next) {
-  console.log(req.body);
+  // console.log(req.body);
 
   var newInvitation = new invitationModel({
     message: req.body.message,
