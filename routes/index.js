@@ -5,6 +5,15 @@ var userModel = require("../models/user");
 var uid2 = require("uid2");
 var SHA256 = require("crypto-js/sha256");
 var encBase64 = require("crypto-js/enc-base64");
+const fs = require("fs");
+var uniqid = require("uniqid");
+var cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "djsgv53qh",
+  api_key: "695523746364995",
+  api_secret: "8_nYfSA9ExicVEAmocPNAFZEJIY",
+});
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -118,7 +127,6 @@ router.get("/alluser", async function (req, res) {
 router.get("/getmydata", async function (req, res) {
   let myUser = await userModel.findOne({ _id: req.query.id });
   console.log("user", myUser);
-  // console.log(myId);
 
   if (myUser) {
     res.json({ result: true, myUser });
@@ -127,8 +135,38 @@ router.get("/getmydata", async function (req, res) {
   }
 });
 
+router.post("/uploadPhoto", async function (req, res, next) {
+  var myUser = await userModel.findOne({ _id: req.query.id });
+  let imagePath = "./imgtmp/" + uniqid() + ".jpg";
+  let resultCopy = await req.files.photo.mv(imagePath);
+  // console.log(myUser);
+  let resultCloudinary = await cloudinary.uploader.upload(imagePath);
+  let cloudinaryUrl = JSON.stringify(resultCloudinary.secure_url);
+  console.log("tot", cloudinaryUrl);
+
+  if (myUser && !resultCopy) {
+    await userModel.updateOne(
+      {
+        _id: req.query.id,
+      },
+      {
+        photo: resultCloudinary.secure_url,
+      }
+    );
+    console.log(myUser);
+
+    res.json({
+      result: true,
+    });
+  } else {
+    res.json({ result: false, message: resultCopy });
+  }
+
+  fs.unlinkSync(imagePath);
+});
+
 router.post("/recordmydata", async function (req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   var myData = await userModel.updateOne(
     {
       _id: req.body.id,
