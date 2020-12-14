@@ -244,7 +244,50 @@ router.post("/new-invitation", async function (req, res, next) {
     notif_lu: false,
   });
   await newInvitation.save();
+
+  console.log("my invitation", newInvitation);
+
+  var userSender = await userModel.findById(req.body.sender);
+  userSender.invitations.push(newInvitation._id);
+
+  var userReceiver = await userModel.findById(req.body.receiver);
+  userReceiver.invitations.push(newInvitation._id);
+
+  console.log("mon sender", userSender);
+
+  console.log("mon receiver", userReceiver);
+
+  await userSender.save();
+  await userReceiver.save();
+
   res.json({ response: true, message: "Message bien envoyé" });
+});
+
+router.get("/invit-send", async function (req, res, next) {
+  const invitationsSend = await invitationModel.find({
+    id_sender: req.query.sender,
+  });
+
+  res.json({ message: "c'est passé!", invitationsSend });
+});
+
+router.get("/invit-received", async function (req, res, next) {
+  const invitationsReceived = await invitationModel.find({
+    id_receiver: req.query.receiver,
+  });
+
+  res.json({ message: "c'est passé!", invitationsReceived });
+});
+
+router.get("/history", async function (req, res, next) {
+  const user = await userModel
+    .findById(req.query.id)
+    .populate("invitations")
+    .exec();
+
+  console.log("mes invitations", user.invitations);
+
+  res.json({ message: "c'est passé!", user });
 });
 
 module.exports = router;
