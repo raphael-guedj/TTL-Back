@@ -221,7 +221,7 @@ router.get("/mydataprofile", async function (req, res) {
     user.description != "" &&
     user.food != ""
   ) {
-    res.json({ result: true });
+    res.json({ result: true, user });
   } else {
     res.json({ result: false });
   }
@@ -245,6 +245,12 @@ router.post("/new-invitation", async function (req, res, next) {
   });
   await newInvitation.save();
   res.json({ response: true, message: "Message bien envoyé" });
+});
+
+router.get("/invitsent", async function (req, res) {
+  let invit = await invitationModel.find({ id_sender: req.query.id });
+
+  res.json({ result: true, invit });
 });
 
 module.exports = router;
