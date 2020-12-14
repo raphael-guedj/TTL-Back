@@ -244,6 +244,16 @@ router.post("/new-invitation", async function (req, res, next) {
     notif_lu: false,
   });
   await newInvitation.save();
+
+  var userSender = await userModel.findById(req.body.sender);
+  userSender.invitations.push(newInvitation._id);
+
+  var userReceiver = await userModel.findById(req.body.receiver);
+  userReceiver.invitations.push(newInvitation._id);
+
+  await userSender.save();
+  await userReceiver.save();
+
   res.json({ response: true, message: "Message bien envoyé" });
 });
 
@@ -251,6 +261,17 @@ router.get("/invitsent", async function (req, res) {
   let invit = await invitationModel.find({ id_sender: req.query.id });
 
   res.json({ result: true, invit });
+});
+
+router.get("/history", async function (req, res, next) {
+  const user = await userModel
+    .findById(req.query.id)
+    .populate("invitations")
+    .exec();
+
+  console.log("mes invitations", user.invitations);
+
+  res.json({ message: "c'est passé!", user });
 });
 
 module.exports = router;
