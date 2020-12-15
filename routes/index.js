@@ -304,6 +304,30 @@ router.get("/acceptinvit", async function (req, res) {
   res.json({ result: true });
 });
 
+router.get("/checkstatusnotif", async function (req, res) {
+  const notifUnread = await invitationModel.find({
+    id_receiver: req.query.id,
+    notif_lu: false,
+  });
+  console.log(notifUnread);
+
+  res.json({ notifUnread: notifUnread.length > 0 });
+});
+
+router.get("/updatenotif", async function (req, res) {
+  const updateNotif = await invitationModel.updateMany(
+    {
+      id_receiver: req.query.id,
+    },
+    {
+      notif_lu: true,
+    }
+  );
+  // console.log(updateNotif);
+
+  res.json({ result: true });
+});
+
 router.get("/history", async function (req, res, next) {
   const user = await userModel
     .findById(req.query.id)
