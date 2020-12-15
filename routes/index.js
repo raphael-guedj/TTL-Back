@@ -258,9 +258,26 @@ router.post("/new-invitation", async function (req, res, next) {
 });
 
 router.get("/invitsent", async function (req, res) {
-  let invit = await invitationModel.find({ id_sender: req.query.id });
+  const invit = await invitationModel.find({
+    id_sender: req.query.id,
+    statut_invit: "En cours",
+  });
 
   res.json({ result: true, invit });
+});
+
+router.get("/cancelinvit", async function (req, res) {
+  console.log(req.query.id);
+  const invitCanceled = await invitationModel.updateOne(
+    {
+      _id: req.query.id,
+    },
+    {
+      statut_invit: "Refusé",
+    }
+  );
+  console.log(invitCanceled);
+  res.json({ result: true });
 });
 
 router.get("/history", async function (req, res, next) {
