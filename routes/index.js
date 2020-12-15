@@ -266,6 +266,16 @@ router.get("/invitsent", async function (req, res) {
   res.json({ result: true, invit });
 });
 
+router.get("/invitreceived", async function (req, res) {
+  const invit = await invitationModel.find({
+    id_receiver: req.query.id,
+    statut_invit: "En cours",
+  });
+  // console.log(invit);
+
+  res.json({ result: true, invit });
+});
+
 router.get("/cancelinvit", async function (req, res) {
   console.log(req.query.id);
   const invitCanceled = await invitationModel.updateOne(
@@ -276,7 +286,21 @@ router.get("/cancelinvit", async function (req, res) {
       statut_invit: "Refusé",
     }
   );
-  console.log(invitCanceled);
+  // console.log(invitCanceled);
+  res.json({ result: true });
+});
+
+router.get("/acceptinvit", async function (req, res) {
+  // console.log(req.query.id);
+  const invitAccepted = await invitationModel.updateOne(
+    {
+      _id: req.query.id,
+    },
+    {
+      statut_invit: "Accepté",
+    }
+  );
+  console.log(invitAccepted);
   res.json({ result: true });
 });
 
@@ -286,7 +310,7 @@ router.get("/history", async function (req, res, next) {
     .populate("invitations")
     .exec();
 
-  console.log("mes invitations", user.invitations);
+  // console.log("mes invitations", user.invitations);
 
   res.json({ message: "c'est passé!", user });
 });
