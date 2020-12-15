@@ -263,15 +263,38 @@ router.get("/invitsent", async function (req, res) {
   res.json({ result: true, invit });
 });
 
-router.get("/history", async function (req, res, next) {
+router.get("/current-invit", async function (req, res, next) {
   const user = await userModel
     .findById(req.query.id)
     .populate("invitations")
     .exec();
 
-  console.log("mes invitations", user.invitations);
+  if (user) {
+    const myInvitFiletred = await user.invitations.filter(
+      (invit) => invit.date > new Date(Date.now())
+    );
+    res.json({ message: "c'est passé!", invitations: myInvitFiletred });
+  } else {
+    res.json({ message: "Ca bloque quelque part" });
+  }
+});
 
-  res.json({ message: "c'est passé!", user });
+router.get("/passed-invit", async function (req, res, next) {
+  const user = await userModel
+    .findById(req.query.id)
+    .populate("invitations")
+    .exec();
+
+  if (user) {
+    const myInvitFiletred = await user.invitations.filter(
+      (invit) => invit.date < new Date(Date.now())
+    );
+    const myInvitSorted = await myInvitFiletred.sort(function (a, b) {
+      return a.date - b.date;
+    });
+
+    res.json({ message: "c'est passé!", invitations: myInvitSorted });
+  }
 });
 
 module.exports = router;
