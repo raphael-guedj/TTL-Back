@@ -333,7 +333,7 @@ router.get("/passed-invit", async function (req, res, next) {
       (invit) => invit.date < new Date(Date.now())
     );
     const myInvitSorted = await myInvitFiletred.sort(function (a, b) {
-      return a.date - b.date;
+      return b.date - a.date;
     });
 
     res.json({ message: "c'est passé!", invitations: myInvitSorted });
