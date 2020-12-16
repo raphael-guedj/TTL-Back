@@ -49,7 +49,6 @@ router.post("/sign-in", async function (req, res) {
     email: req.body.email,
   });
   if (userExists) {
-    // console.log(userExists);
     var hash = SHA256(req.body.password + userExists.salt).toString(encBase64);
   }
 
@@ -67,7 +66,6 @@ router.post("/sign-in", async function (req, res) {
         isConnected: true,
       }
     );
-    // console.log(userExists);
     res.json({ result: true, message: "Sign-in OK", userExists });
   } else {
     res.json({
@@ -79,9 +77,7 @@ router.post("/sign-in", async function (req, res) {
 });
 
 router.get("/logout", async function (req, res, next) {
-  // console.log(req.query.token);
   var user = await userModel.findOne({ token: req.query.token });
-  // console.log("mon user", user);
   if (user) {
     await userModel.updateOne(
       {
@@ -91,7 +87,6 @@ router.get("/logout", async function (req, res, next) {
         isConnected: false,
       }
     );
-    // console.log(user);
     res.json({ result: true });
   } else {
     res.json({ result: false });
@@ -99,7 +94,6 @@ router.get("/logout", async function (req, res, next) {
 });
 
 router.get("/delete-user", async function (req, res, next) {
-  // console.log(req.query.id);
   await userModel.deleteOne({
     _id: req.query.id,
   });
@@ -108,7 +102,7 @@ router.get("/delete-user", async function (req, res, next) {
 
 router.get("/get-user", async function (req, res, next) {
   var user = await userModel.findOne({ token: req.query.token });
-  // console.log("mon user", user);
+
   if (user) {
     res.json({ result: true, user });
   } else {
@@ -119,11 +113,8 @@ router.get("/get-user", async function (req, res, next) {
 router.get("/alluser", async function (req, res) {
   let allUser = await userModel.find();
   let myId = req.query.id;
-  // console.log("avec mon id", allUser);
-  // console.log(myId);
 
   let userExcl = allUser.filter((user) => user._id != myId);
-  // console.log("sans mon id", userExcl);
 
   if (allUser) {
     res.json({ result: true, userExcl });
@@ -134,8 +125,6 @@ router.get("/alluser", async function (req, res) {
 
 router.get("/getmydata", async function (req, res) {
   let myUser = await userModel.findOne({ _id: req.query.id });
-  // console.log("user", myUser);
-  // console.log(myId);
 
   if (myUser) {
     res.json({ result: true, myUser });
@@ -148,7 +137,6 @@ router.post("/uploadPhoto", async function (req, res, next) {
   var myUser = await userModel.findOne({ _id: req.query.id });
   let imagePath = "./imgtmp/" + uniqid() + ".jpg";
   let resultCopy = await req.files.photo.mv(imagePath);
-  // console.log(myUser);
   let resultCloudinary = await cloudinary.uploader.upload(imagePath);
   let cloudinaryUrl = JSON.stringify(resultCloudinary.secure_url);
   console.log("tot", cloudinaryUrl);
@@ -175,7 +163,6 @@ router.post("/uploadPhoto", async function (req, res, next) {
 });
 
 router.post("/recordmydata", async function (req, res) {
-  // console.log(req.body);
   var myData = await userModel.updateOne(
     {
       _id: req.body.id,
@@ -198,7 +185,6 @@ router.post("/recordmydata", async function (req, res) {
       wish6: JSON.parse(req.body.wish6),
     }
   );
-  // console.log(req.body);
   if (myData) {
     res.json({ result: true, myData });
   } else {
@@ -207,9 +193,7 @@ router.post("/recordmydata", async function (req, res) {
 });
 
 router.get("/mydataprofile", async function (req, res) {
-  // console.log(req.query.id);
   var user = await userModel.findOne({ _id: req.query.id });
-  // console.log(user);
   if (
     user.name != "" &&
     user.profession != "" &&
@@ -228,8 +212,6 @@ router.get("/mydataprofile", async function (req, res) {
 });
 
 router.post("/new-invitation", async function (req, res, next) {
-  // console.log(req.body);
-
   var newInvitation = new invitationModel({
     message: req.body.message,
     date: req.body.date,
@@ -258,9 +240,67 @@ router.post("/new-invitation", async function (req, res, next) {
 });
 
 router.get("/invitsent", async function (req, res) {
-  let invit = await invitationModel.find({ id_sender: req.query.id });
+  const invit = await invitationModel.find({
+    id_sender: req.query.id,
+    statut_invit: "En cours",
+  });
 
   res.json({ result: true, invit });
+});
+
+router.get("/invitreceived", async function (req, res) {
+  const invit = await invitationModel.find({
+    id_receiver: req.query.id,
+    statut_invit: "En cours",
+  });
+
+  res.json({ result: true, invit });
+});
+
+router.get("/cancelinvit", async function (req, res) {
+  const invitCanceled = await invitationModel.updateOne(
+    {
+      _id: req.query.id,
+    },
+    {
+      statut_invit: "Refusé",
+    }
+  );
+  res.json({ result: true });
+});
+
+router.get("/acceptinvit", async function (req, res) {
+  const invitAccepted = await invitationModel.updateOne(
+    {
+      _id: req.query.id,
+    },
+    {
+      statut_invit: "Accepté",
+    }
+  );
+  res.json({ result: true });
+});
+
+router.get("/checkstatusnotif", async function (req, res) {
+  const notifUnread = await invitationModel.find({
+    id_receiver: req.query.id,
+    notif_lu: false,
+  });
+
+  res.json({ notifUnread: notifUnread.length > 0 });
+});
+
+router.get("/updatenotif", async function (req, res) {
+  const updateNotif = await invitationModel.updateMany(
+    {
+      id_receiver: req.query.id,
+    },
+    {
+      notif_lu: true,
+    }
+  );
+
+  res.json({ result: true });
 });
 
 router.get("/current-invit", async function (req, res, next) {
