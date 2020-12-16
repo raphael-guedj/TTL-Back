@@ -309,11 +309,16 @@ router.get("/current-invit", async function (req, res, next) {
     .populate("invitations")
     .exec();
 
+  console.log(user.invitations);
+
   if (user) {
     const myInvitFiletred = await user.invitations.filter(
       (invit) => invit.date > new Date(Date.now())
     );
-    res.json({ message: "c'est passé!", invitations: myInvitFiletred });
+    const myInvitSorted = await myInvitFiletred.sort(function (a, b) {
+      return a.date - b.date;
+    });
+    res.json({ message: "c'est passé!", invitations: myInvitSorted });
   } else {
     res.json({ message: "Ca bloque quelque part" });
   }
