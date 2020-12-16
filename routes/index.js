@@ -329,6 +329,7 @@ router.get("/passed-invit", async function (req, res, next) {
     .exec();
 
   if (user) {
+    user.invitations.map((invit) => invit.date.setHours(23, 59, 59));
     const myInvitFiletred = await user.invitations.filter(
       (invit) => invit.date < new Date(Date.now())
     );
