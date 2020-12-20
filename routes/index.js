@@ -139,7 +139,7 @@ router.post("/uploadPhoto", async function (req, res, next) {
   let resultCopy = await req.files.photo.mv(imagePath);
   let resultCloudinary = await cloudinary.uploader.upload(imagePath);
   let cloudinaryUrl = JSON.stringify(resultCloudinary.secure_url);
-  console.log("tot", cloudinaryUrl);
+  // console.log("tot", cloudinaryUrl);
 
   if (myUser && !resultCopy) {
     await userModel.updateOne(
@@ -150,7 +150,7 @@ router.post("/uploadPhoto", async function (req, res, next) {
         photo: resultCloudinary.secure_url,
       }
     );
-    console.log(myUser);
+    // console.log(myUser);
 
     res.json({
       result: true,
