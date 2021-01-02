@@ -203,7 +203,8 @@ router.get("/mydataprofile", async function (req, res) {
     user.secteur != "" &&
     user.language != "" &&
     user.description != "" &&
-    user.food != ""
+    user.food != "" &&
+    user.photo != ""
   ) {
     res.json({ result: true, user });
   } else {
@@ -330,10 +331,10 @@ router.get("/passed-invit", async function (req, res, next) {
 
   if (user) {
     user.invitations.map((invit) => invit.date.setHours(23, 59, 59));
-    const myInvitFiletred = await user.invitations.filter(
+    const myInvitFiltred = await user.invitations.filter(
       (invit) => invit.date < new Date(Date.now())
     );
-    const myInvitSorted = await myInvitFiletred.sort(function (a, b) {
+    const myInvitSorted = await myInvitFiltred.sort(function (a, b) {
       return b.date - a.date;
     });
 
