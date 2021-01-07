@@ -17,6 +17,7 @@ cloudinary.config({
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
+  console.log("Hello");
   res.render("index", { title: "Express" });
 });
 

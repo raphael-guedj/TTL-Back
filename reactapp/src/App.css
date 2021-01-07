@@ -1,0 +1,214 @@
+@import "~antd/dist/antd.css";
+
+/*---------------- NAVBAR---------------- */
+
+.Logo {
+  background-image: url("../src/assets/Logo_Forky_dark.png");
+}
+
+/* Navbar container */
+.navbar {
+  background-color: #b6dbd9;
+  font-family: "Noto", sans-serif;
+  padding: 5px;
+}
+
+/* Liens navbar */
+.navbar a {
+  float: left;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Dropdown container */
+.notif {
+  float: right;
+  padding-top: 5px;
+}
+
+/* Ajouter un fond sur les liens navbar on hover */
+.navbar a:hover {
+  color: #418581;
+}
+
+.notif a:hover {
+  color: black;
+}
+
+/*---------------- BODY ---------------- */
+
+h1 {
+  color: white;
+  font-weight: bold;
+  font-size: 30px;
+  font-family: "Noto", sans-serif;
+  margin-bottom: 100px;
+}
+
+.Text {
+  color: white;
+  font-size: 16px;
+  margin-top: 10px;
+  font-family: "Noto", sans-serif;
+}
+
+Button {
+  background-color: #f9b34c;
+  margin: 10;
+  width: 250;
+  border-radius: 20;
+}
+
+.Title {
+  font-size: 20px;
+  color: #f5f3f4;
+  font-family: "Noto", sans-serif;
+}
+
+.Title1 {
+  font-size: 60px;
+  color: #f5f3f4;
+  font-family: "Carter One", sans-serif;
+}
+
+.Title2 {
+  font-size: 30px;
+  margin-top: 10px;
+  color: #418581;
+  font-family: "Neucha", sans-serif;
+}
+
+.Invit-text {
+  font-size: 15px;
+  color: black;
+  margin-left: 5px;
+}
+
+/*---------------- LOGIN ---------------- */
+
+.Login-page {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url("../src/assets/lunch.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.Landing-page {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url("../src/assets/lunch_bright.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.Connect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 15px;
+  border-radius: 5%;
+
+  margin: 40px;
+}
+
+.Login-input {
+  margin: 15px;
+  width: 400px;
+}
+
+.Sign {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  border-radius: 10%;
+  border-color: white;
+  background-color: rgba(115, 122, 128, 0.5);
+  margin: 40px;
+}
+
+.Sign .Login-input {
+  width: 250px;
+}
+
+/*---------------- HOME ---------------- */
+
+.HomeThemes {
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 20px;
+}
+
+.Banner {
+  height: 150px;
+  background-image: url("../src/assets/lunch_bright.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.8;
+}
+
+.Card {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ant-card-actions::after {
+  color: #418581;
+}
+
+/*---------------- NAVBAR---------------- */
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #f9b34c;
+  border-color: #f9b34c;
+}
+
+/* ----------------FOOTER---------------- */
+
+.Footer {
+  background-color: #faba5c;
+  color: white;
+  padding: 18px;
+  text-align: center;
+  font-family: "Noto", sans-serif;
+}
+
+ul {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-around;
+  text-decoration: none;
+  text-transform: uppercase;
+  list-style: none;
+}
+
+li {
+  list-style-type: none;
+  padding: 12px;
+}
+
+.Footer a {
+  color: white;
+  font-size: 15px;
+}
+
+.Footer a:hover {
+  color: #f7970a;
+  font-size: 15px;
+}
